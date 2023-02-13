@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #this script indefinitely writes I am alive! to the file /tmp/my_process
 #In between every I am alive! message, the program should pause for 2 seconds
 #this script 11-manage_my_process that manages manage_my_process. (both files need to be pushed to git)
