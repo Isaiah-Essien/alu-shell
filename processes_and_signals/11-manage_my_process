@@ -1,39 +1,24 @@
 #!/usr/bin/env bash
-#this script indefinitely writes I am alive! to the file /tmp/my_process
-#In between every I am alive! message, the program should pause for 2 seconds
-#this script 11-manage_my_process that manages manage_my_process. (both files need to be pushed to git)
+#manage my process
 
-start_action() {
-    # starts manage_my_process in the background
+file=/var/run/my_process.pid
+if [ "$1" == "start" ];
+then
     ./manage_my_process &
-    # creates /var/run/my_process.pid with its PID inside
-    echo $!>/var/run/my_process.pid
-}
-stop_action() {
-    kill manage_my_process
+    sudo bash -c "echo $! > $file"
+    echo "manage_my_process started"
+elif [ "$1" == "stop" ];
+then
     pkill -f ./manage_my_process
-    # delete /var/run/my_process.pid with force option and sudo to make sure it’s deleted
-    sudo rm /var/run/my_process.pid   
-}
-
-case "$1" in
-    start)
-	start_action
-	echo "manage_my_process started"	
-	;;
-
-    stop)
-	stop_action
-	echo "manage_my_process stopped"	
-	;;
-
-    restart)
-	stop_action
-	start_action
-	echo "manage_my_process restarted"	
-	;;
-
-    *)
-	echo "Usage: manage_my_process {start|stop|restart}"
-	;;
-esac
+    sudo rm $file
+    echo "manage_my_process stopped"
+elif [ "$1" == "restart" ];
+then
+    pkill -f ./manage_my_process
+    sudo rm $file
+    ./manage_my_process &
+    sudo bash -c "echo $! > $file"
+    echo "manage_my_process restarted"
+else
+    echo "Usage: manage_my_process {start|stop|restart}"
+fi
